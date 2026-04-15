@@ -1,4 +1,4 @@
 .vscode
 goe.db
 .env
-ingestion/_pycache_
+ingestion/__pycache__/
