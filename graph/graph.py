@@ -2,12 +2,20 @@ import sqlite3
 import sys
 import os
 from neo4j import GraphDatabase
+from dotenv import load_dotenv
+
+load_dotenv(os.path.join(os.path.dirname(__file__), "../.env"))
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "../ingestion"))
 from store import get_connection
 
-URI = os.environ['URI']
-AUTH = os.environ['AUTH']
+URI = os.getenv('NEO4J_URI')
+print("URI =", repr(URI))
+USER=os.getenv("NEO4J_USER")
+PASSWORD=os.getenv("NEO4J_PASSWORD")
+AUTH=(USER,PASSWORD)
+
+
 
 def build_graph():
     conn = get_connection()

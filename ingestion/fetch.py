@@ -17,14 +17,21 @@ SOURCES = [
         "url": "https://www.thehindu.com/news/national/?service=rss",
         "name": "the_hindu_national"
     },
-    # {
-    #     "url": "https://feeds.reuters.com/reuters/INtopNews",
-    #     "name": "reuters_india"
-    # },
-    # {
-    #     "url": "https://pib.gov.in/RssMain.aspx?ModId=6&Lang=1&Regid=3",
-    #     "name": "pib_india"
-    # },
+    {
+        "url": "https://feeds.bbci.co.uk/news/world/asia/india/rss.xml",
+        "name": "BBCnews_India"
+    },
+    {
+        "url": "https://pib.gov.in/RssMain.aspx?ModId=6&Lang=1&Regid=3",
+        "name": "The_Times_Of_India"
+    },
+    {
+        "url": "https://feeds.feedburner.com/ndtvnews-top-stories",
+        "name": "NDTV_India"
+    },{
+        "url": "https://www.firstpost.com/commonfeeds/v1/mfp/rss/india.xml",
+        "name": "FirstPost_India"
+    },
 ]
 
 def make_fingerprint(url):
