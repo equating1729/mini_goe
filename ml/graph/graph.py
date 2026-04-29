@@ -1,3 +1,5 @@
+from dotenv import load_dotenv
+load_dotenv()
 import sqlite3
 import sys
 import os
@@ -21,7 +23,7 @@ def build_graph():
     conn = get_connection()
     cursor = conn.cursor()
 
-    driver = GraphDatabase.driver(URI, auth=AUTH)
+    driver = GraphDatabase.driver(URI, auth=(USER, PASSWORD))
 
     cursor.execute("""
         SELECT e1.article_id, e1.text as entity1, e1.label as label1,

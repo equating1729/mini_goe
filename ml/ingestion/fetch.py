@@ -4,7 +4,10 @@ import sqlite3
 from datetime import datetime
 import sys
 import os
+import ssl
+import certifi
 
+ssl._create_default_https_context = lambda: ssl.create_default_context(cafile=certifi.where())
 sys.path.append(os.path.dirname(__file__))
 from store import get_connection, init_db
 
@@ -18,19 +21,12 @@ SOURCES = [
         "name": "the_hindu_national"
     },
     {
-        "url": "https://feeds.bbci.co.uk/news/world/asia/india/rss.xml",
-        "name": "BBCnews_India"
+        "url": "https://feeds.reuters.com/reuters/INtopNews",
+        "name": "reuters_india"
     },
     {
         "url": "https://pib.gov.in/RssMain.aspx?ModId=6&Lang=1&Regid=3",
-        "name": "The_Times_Of_India"
-    },
-    {
-        "url": "https://feeds.feedburner.com/ndtvnews-top-stories",
-        "name": "NDTV_India"
-    },{
-        "url": "https://www.firstpost.com/commonfeeds/v1/mfp/rss/india.xml",
-        "name": "FirstPost_India"
+        "name": "pib_india"
     },
 ]
 
@@ -99,3 +95,14 @@ def run_ingestion():
 if __name__ == "__main__":
     init_db()
     run_ingestion()
+
+for source in SOURCES:
+    print(f"\nTesting: {source['name']}")
+
+    feed = feedparser.parse(source["url"])
+
+    print("bozo:", feed.bozo)
+    print("entries:", len(feed.entries))
+
+    if feed.bozo:
+        print("Error:", feed.bozo_exception)
