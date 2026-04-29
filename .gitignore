@@ -1,4 +1,7 @@
 .vscode
 goe.db
+data
 .env
-ingestion/__pycache__/
+__pycache__
+node_modules
+venv
