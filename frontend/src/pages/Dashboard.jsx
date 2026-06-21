@@ -36,7 +36,7 @@ export default function Dashboard({ activeDomain }) {
                 <Separator style={styles.separatorVertical} />
 
                 <Panel defaultSize={50} minSize={25} style={styles.panel}>
-                  <AIConsole />
+                  <AIConsole domain = {activeDomain} />
                 </Panel>
               </Group>
             </Panel>

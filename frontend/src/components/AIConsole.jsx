@@ -5,7 +5,7 @@ You analyze global events strictly from India's geopolitical, economic, security
 Keep answers concise (2-4 sentences), use a professional intelligence analyst tone, and always tie the answer back to India's interests.
 Avoid markdown. Use plain text only.`;
 
-export default function AIConsole() {
+export default function AIConsole({ domain }) {
   const [messages, setMessages] = useState([
     {
       role: "assistant",
@@ -33,7 +33,7 @@ export default function AIConsole() {
       const response = await fetch("http://localhost:8000/api/query", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: q }),
+        body: JSON.stringify({ question: q, domain: domain }),
       });
 
       const data = await response.json();
@@ -64,7 +64,7 @@ export default function AIConsole() {
         <div>
           <div style={styles.title}>STRATEGIC AI CONSOLE</div>
           <div style={styles.subtitle}>
-            Geopolitical Intelligence Processor v4.0
+            Geopolitical Intelligence Processor v4.0 — {domain}
           </div>
         </div>
       </div>
