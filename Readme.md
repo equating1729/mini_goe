@@ -93,7 +93,7 @@ Make sure these are installed before starting:
 ### 1. Clone the repo
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/equating1729/mini_goe.git
 cd mini_goe
 ```
 
