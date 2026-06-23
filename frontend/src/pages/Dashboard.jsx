@@ -30,7 +30,7 @@ export default function Dashboard({ activeDomain }) {
             <Panel defaultSize={50} minSize={25} style={styles.panel}>
               <Group orientation="horizontal" style={styles.group}>
                 <Panel defaultSize={50} minSize={25} style={styles.panel}>
-                  <IndiaPanel />
+                  <IndiaPanel domain={activeDomain} />
                 </Panel>
 
                 <Separator style={styles.separatorVertical} />
