@@ -301,13 +301,6 @@ export default function WorldMap({ activeDomain = "ALL" }) {
                 </div>
               ))}
             </div>
-
-            <div style={s.pFoot}>
-              <span style={s.credit}>
-                © <span style={{ color: "#4ab8e8" }}>Elie Habib</span> ·
-                Someone™
-              </span>
-            </div>
           </div>
         </Panel>
 
