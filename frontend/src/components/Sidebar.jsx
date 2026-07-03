@@ -105,10 +105,10 @@ export default function Sidebar({ activeDomain = "ALL" }) {
             {activeDomain === "ALL" ? "Current Live Updates" : `${activeDomain} Updates`}
           </p>
         </div>
-        <div style={styles.hubId}>
+        {/* <div style={styles.hubId}>
           <span style={styles.hubLabel}>HUB-ID:</span>
           <span style={styles.hubValue}>IND-001</span>
-        </div>
+        </div> */}
       </div>
 
       {/* Stats bar */}

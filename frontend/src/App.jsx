@@ -1,7 +1,6 @@
 import { useState } from "react";
 import "./styles/globals.css";
 import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
 import Dashboard from "./pages/Dashboard";
 
 export default function App() {
@@ -13,7 +12,6 @@ export default function App() {
       <div style={styles.body}>
         <Dashboard activeDomain={activeDomain} />
       </div>
-      <Footer />
     </div>
   );
 }
