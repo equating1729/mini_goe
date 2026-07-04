@@ -76,6 +76,11 @@ SOURCES = [
         "name": "economic_times",
         "domain": "ECONOMICS"
     },
+    {
+    "url": "https://www.hindustantimes.com/feeds/rss/business/rssfeed.xml",
+    "name": "hindustan_times_business",
+    "domain": "ECONOMICS"
+},
 
     # SOCIETY
     {
@@ -83,6 +88,11 @@ SOURCES = [
         "name": "the_hindu_society",
         "domain": "SOCIETY"
     },
+    {
+    "url": "https://www.hindustantimes.com/feeds/rss/lifestyle/art-culture/rssfeed.xml",
+    "name": "hindustan_times_art_culture",
+    "domain": "SOCIETY"
+},
 ]
 
 def make_fingerprint(url):
