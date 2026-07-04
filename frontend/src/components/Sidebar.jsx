@@ -199,7 +199,7 @@ export default function Sidebar({ activeDomain = "ALL" }) {
             {stats ? `${stats.total_articles} RECORDS` : "—"}
           </span>
         </div>
-        <button style={styles.protocolBtn}>INITIATE PROTOCOL</button>
+        {/* <button style={styles.protocolBtn}>INITIATE PROTOCOL</button> */}
       </div>
     </div>
   );

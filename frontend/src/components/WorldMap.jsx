@@ -15,16 +15,15 @@ const LAYERS_DATA = [
     label: "DEFENSE ENTITIES",
     color: "#4a8ae8",
   },
-  { id: "tech_entities", icon: "⬜", label: "TECH ENTITIES", color: "#4ab8e8" },
+  { id: "tech_entities", icon: "⬜", label: "TECH ENTITIES", color: "#ffb303" },
   {
     id: "climate_entities",
     icon: "⊙",
     label: "CLIMATE ENTITIES",
-    color: "#3ddc84",
+    color: "#4b00a0",
   },
-  { id: "person_entities", icon: "●", label: "KEY PERSONS", color: "#c8922a" },
+  { id: "person_entities", icon: "●", label: "KEY PERSONS", color: "#e6f700" },
 ];
-
 const DOMAIN_LAYER_MAP = {
   ALL: [
     "geo_entities",
@@ -258,10 +257,10 @@ export default function WorldMap({ activeDomain = "ALL" }) {
           <div style={s.panel}>
             <div style={s.pHead}>
               <span style={s.pTitle}>LAYERS</span>
-              <div style={s.pIcons}>
+              {/* <div style={s.pIcons}>
                 <span style={s.iBtn}>?</span>
                 <span style={s.iBtn}>▼</span>
-              </div>
+              </div> */}
             </div>
 
             <div style={s.searchBox}>

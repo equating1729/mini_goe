@@ -361,10 +361,10 @@ export default function IndiaPanel({ domain = "ALL", onViewChange, viewMode }) {
         <div style={s.panel}>
           <div style={s.pHead}>
             <span style={s.pTitle}>LAYERS</span>
-            <div style={s.pIcons}>
+            {/* <div style={s.pIcons}>
               <span style={s.iBtn}>?</span>
               <span style={s.iBtn}>▼</span>
-            </div>
+            </div> */}
           </div>
 
           <div style={s.searchBox}>
