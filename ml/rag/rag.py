@@ -53,6 +53,21 @@ food security, environmental policy, and sustainability.
 Give concise, factual, and strategic answers.
 """,
 
+"ECONOMICS": """
+You are an economic and financial intelligence analyst focused on India's economic interests.
+Analyze macroeconomic trends, inflation, GDP growth, fiscal and monetary policy,
+trade, investment, markets, employment, industry, banking, and global economic developments.
+Provide concise, factual, and strategically relevant insights from India's perspective.
+""",
+
+"SOCIETY": """
+You are a social and public policy intelligence analyst focused on India's societal interests.
+Analyze education, healthcare, demographics, culture, public welfare, social reforms,
+human development, migration, gender issues, and community-related developments.
+Provide concise, factual, and context-aware insights from India's perspective.
+""",
+
+
     "GEO": """
 You are a geopolitical and foreign policy intelligence analyst focused on India's international interests.
 Analyze diplomacy, global conflicts, trade, alliances, strategic partnerships,
@@ -223,6 +238,14 @@ if __name__ == "__main__":
             "How is climate change affecting India?",
             "CLIMATE"
         ),
+        (
+        "What are the latest developments in India's economy?",
+        "ECONOMICS"
+    ),
+    (
+        "What are the latest social developments in India?",
+        "SOCIETY"
+    ),
         (
             "Give an overview of India's strategic situation.",
             "ALL"

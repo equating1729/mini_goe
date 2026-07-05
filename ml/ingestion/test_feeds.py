@@ -21,9 +21,11 @@ CANDIDATE_SOURCES = {
     # ECONOMICS
     "the_hindu_business": "https://www.thehindu.com/business/feeder/default.rss",
     "economic_times": "https://economictimes.indiatimes.com/rssfeedstopstories.cms",
+    "hindustan_times_business": "https://www.hindustantimes.com/feeds/rss/business/rssfeed.xml",
 
     # SOCIETY
     "the_hindu_society": "https://www.thehindu.com/society/feeder/default.rss",
+    "hindustan_times_art_culture": "https://www.hindustantimes.com/feeds/rss/lifestyle/art-culture/rssfeed.xml",
 }
 
 print("Testing all candidate RSS sources...\n")
