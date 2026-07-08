@@ -1,4 +1,4 @@
-const tabs = ["ALL", "GEO", "DEFENSE", "TECH", "CLIMATE"];
+const tabs = ["ALL", "GEO", "DEFENSE", "TECH", "CLIMATE","ECONOMICS","SOCIETY"];
 
 export default function Navbar({ activeDomain, setActiveDomain }) {
   return (
