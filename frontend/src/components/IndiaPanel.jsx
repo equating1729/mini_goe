@@ -2,49 +2,57 @@ import { useEffect, useRef, useState } from "react";
 
 // India-specific coordinates for major locations
 const INDIA_COORDS = {
-  "New Delhi": [28.6139, 77.2090],
-  "Delhi": [28.6139, 77.2090],
-  "Mumbai": [19.0760, 72.8777],
-  "Bangalore": [12.9716, 77.5946],
-  "Bengaluru": [12.9716, 77.5946],
-  "Chennai": [13.0827, 80.2707],
-  "Kolkata": [22.5726, 88.3639],
-  "Hyderabad": [17.3850, 78.4867],
-  "Ahmedabad": [23.0225, 72.5714],
-  "Pune": [18.5204, 73.8567],
-  "Jaipur": [26.9124, 75.7873],
-  "Lucknow": [26.8467, 80.9462],
-  "Kanpur": [26.4499, 80.3319],
-  "Nagpur": [21.1458, 79.0882],
-  "Indore": [22.7196, 75.8577],
-  "Bhopal": [23.2599, 77.4126],
-  "Visakhapatnam": [17.6868, 83.2185],
-  "Patna": [25.5941, 85.1376],
-  "Vadodara": [22.3072, 73.1812],
-  "Guwahati": [26.1445, 91.7362],
-  "Chandigarh": [30.7333, 76.7794],
-  "Srinagar": [34.0837, 74.7973],
-  "Amritsar": [31.6340, 74.8723],
-  "Jodhpur": [26.2389, 73.0243],
-  "Coimbatore": [11.0168, 76.9558],
-  "Kochi": [9.9312, 76.2673],
-  "Thiruvananthapuram": [8.5241, 76.9366],
-  "Bhubaneswar": [20.2961, 85.8245],
-  "Ranchi": [23.3441, 85.3096],
-  "Dehradun": [30.3165, 78.0322],
-  "Shimla": [31.1048, 77.1734],
-  "Gangtok": [27.3389, 88.6065],
-  "Itanagar": [27.0844, 93.6053],
-  "Imphal": [24.8170, 93.9368],
-  "Aizawl": [23.7271, 92.7176],
-  "Shillong": [25.5788, 91.8933],
-  "Agartala": [23.8315, 91.2868],
-  "Dimapur": [25.9110, 93.7273],
-  "Port Blair": [11.6234, 92.7265],
-  "Silvassa": [20.2737, 72.9974],
-  "Daman": [20.4283, 72.8397],
-  "Puducherry": [11.9416, 79.8083],
-  "Kavaratti": [10.5622, 72.6369],
+  // Cities
+  "New Delhi": [28.6139, 77.209],
+  Delhi: [28.6139, 77.209],
+  Mumbai: [19.076, 72.8777],
+  Bangalore: [12.9716, 77.5946],
+  Bengaluru: [12.9716, 77.5946],
+  Chennai: [13.0827, 80.2707],
+  Kolkata: [22.5726, 88.3639],
+  Hyderabad: [17.385, 78.4867],
+  Ahmedabad: [23.0225, 72.5714],
+  Pune: [18.5204, 73.8567],
+  Jaipur: [26.9124, 75.7873],
+  Lucknow: [26.8467, 80.9462],
+  Srinagar: [34.0837, 74.7973],
+  Chandigarh: [30.7333, 76.7794],
+  Kochi: [9.9312, 76.2673],
+  Bhopal: [23.2599, 77.4126],
+  Patna: [25.5941, 85.1376],
+  Guwahati: [26.1445, 91.7362],
+  Amritsar: [31.634, 74.8723],
+  Visakhapatnam: [17.6868, 83.2185],
+
+  // Key entities that appear in India news
+  India: [28.6139, 77.209],
+  Modi: [28.6139, 77.209],
+  BJP: [28.6139, 77.209],
+  Congress: [28.6139, 77.209],
+  "Supreme Court": [28.6139, 77.209],
+  Parliament: [28.6139, 77.209],
+  MEA: [28.6139, 77.209],
+  DRDO: [28.6139, 77.209],
+  ISRO: [12.9716, 77.5946],
+  RBI: [19.076, 72.8777],
+  Tata: [19.076, 72.8777],
+  Reliance: [19.076, 72.8777],
+  Infosys: [12.9716, 77.5946],
+  Wipro: [12.9716, 77.5946],
+  TCS: [19.076, 72.8777],
+  "Indian Army": [28.6139, 77.209],
+  "Indian Navy": [19.076, 72.8777],
+  "Indian Air Force": [28.6139, 77.209],
+  Kashmir: [34.0837, 74.7973],
+  LAC: [33.0, 79.0],
+  Punjab: [31.1471, 75.3412],
+  Gujarat: [22.2587, 71.1924],
+  Maharashtra: [19.7515, 75.7139],
+  Rajasthan: [27.0238, 74.2179],
+  "Tamil Nadu": [11.1271, 78.6569],
+  Kerala: [10.8505, 76.2711],
+  "West Bengal": [22.9868, 87.855],
+  "Uttar Pradesh": [26.8467, 80.9462],
 };
 
 // Layer definitions for India - SAME COLORS AS WORLDMAP
@@ -88,7 +96,13 @@ const INDIA_LAYERS = [
 
 // Domain to layer mapping - SAME AS WORLDMAP
 const DOMAIN_LAYER_MAP = {
-  ALL: ["geo_entities", "defense_entities", "tech_entities", "climate_entities", "person_entities"],
+  ALL: [
+    "geo_entities",
+    "defense_entities",
+    "tech_entities",
+    "climate_entities",
+    "person_entities",
+  ],
   GEO: ["geo_entities", "person_entities"],
   DEFENSE: ["defense_entities", "person_entities"],
   TECH: ["tech_entities"],
@@ -97,20 +111,20 @@ const DOMAIN_LAYER_MAP = {
 
 // Entity label to layer mapping
 const ENTITY_LABEL_TO_LAYER = {
-  "GPE": "geo_entities",
-  "LOC": "geo_entities",
-  "NORP": "geo_entities",
-  "ORG": "defense_entities",
-  "EVENT": "defense_entities",
-  "PERSON": "person_entities",
-  "DATE": "climate_entities",
-  "TIME": "climate_entities",
-  "MONEY": "tech_entities",
-  "PERCENT": "tech_entities",
-  "FAC": "tech_entities",
-  "PRODUCT": "tech_entities",
-  "WORK_OF_ART": "tech_entities",
-  "LAW": "defense_entities",
+  GPE: "geo_entities",
+  LOC: "geo_entities",
+  NORP: "geo_entities",
+  ORG: "defense_entities",
+  EVENT: "defense_entities",
+  PERSON: "person_entities",
+  DATE: "climate_entities",
+  TIME: "climate_entities",
+  MONEY: "tech_entities",
+  PERCENT: "tech_entities",
+  FAC: "tech_entities",
+  PRODUCT: "tech_entities",
+  WORK_OF_ART: "tech_entities",
+  LAW: "defense_entities",
 };
 
 // Classify entity to layer - SAME AS WORLDMAP
@@ -128,19 +142,19 @@ function getEntityColor(label, activeDomain) {
   if (activeDomain === "DEFENSE") return "#4a8ae8";
   if (activeDomain === "TECH") return "#4ab8e8";
   if (activeDomain === "CLIMATE") return "#3ddc84";
-  
+
   const layer = ENTITY_LABEL_TO_LAYER[label];
-  const found = INDIA_LAYERS.find(l => l.id === layer);
+  const found = INDIA_LAYERS.find((l) => l.id === layer);
   if (found) return found.color;
-  
+
   return "#6a6865";
 }
 
 function markerHtml(color, connections, pulse) {
   const size = Math.max(8, Math.min(20, 8 + (connections || 0) * 0.5));
   return `<div style="position:relative;display:flex;align-items:center;justify-content:center;width:${size + 12}px;height:${size + 12}px;">
-    ${pulse ? `<div style="position:absolute;width:${size + 12}px;height:${size + 12}px;border-radius:50%;background:${color};opacity:0.25;animation:indiaPulse 1.8s ease-out infinite;"></div>` : ''}
-    <div style="width:${size}px;height:${size}px;border-radius:50%;background:${color};box-shadow:0 0 ${size/2}px ${color};z-index:2;border:1px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;font-family:'Share Tech Mono',monospace;font-size:${Math.max(5, size/3)}px;color:#000;font-weight:700;">
+    ${pulse ? `<div style="position:absolute;width:${size + 12}px;height:${size + 12}px;border-radius:50%;background:${color};opacity:0.25;animation:indiaPulse 1.8s ease-out infinite;"></div>` : ""}
+    <div style="width:${size}px;height:${size}px;border-radius:50%;background:${color};box-shadow:0 0 ${size / 2}px ${color};z-index:2;border:1px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;font-family:'Share Tech Mono',monospace;font-size:${Math.max(5, size / 3)}px;color:#000;font-weight:700;">
       ${connections || 1}
     </div>
   </div>`;
@@ -176,10 +190,11 @@ export default function IndiaPanel({ domain = "ALL", onViewChange, viewMode }) {
     fetch(`http://localhost:8000/api/graph/entities?limit=50${domainParam}`)
       .then((r) => r.json())
       .then((data) => {
-        const indiaEntities = data.filter(e => {
-          const match = Object.keys(INDIA_COORDS).find(city => 
-            e.name.toLowerCase().includes(city.toLowerCase()) || 
-            city.toLowerCase().includes(e.name.toLowerCase())
+        const indiaEntities = data.filter((e) => {
+          const match = Object.keys(INDIA_COORDS).find(
+            (city) =>
+              e.name.toLowerCase().includes(city.toLowerCase()) ||
+              city.toLowerCase().includes(e.name.toLowerCase()),
           );
           if (match) {
             e.coords = INDIA_COORDS[match];
@@ -211,9 +226,12 @@ export default function IndiaPanel({ domain = "ALL", onViewChange, viewMode }) {
       attributionControl: false,
     });
 
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
-      maxZoom: 19,
-    }).addTo(map);
+    L.tileLayer(
+      "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+      {
+        maxZoom: 19,
+      },
+    ).addTo(map);
 
     INDIA_LAYERS.forEach((layer) => {
       const group = L.layerGroup();
@@ -265,7 +283,7 @@ export default function IndiaPanel({ domain = "ALL", onViewChange, viewMode }) {
 
     if (entities.length === 0) return;
 
-    const maxConn = Math.max(...entities.map(e => e.connections || 1), 1);
+    const maxConn = Math.max(...entities.map((e) => e.connections || 1), 1);
 
     entities.forEach((entity) => {
       if (!entity.coords) return;
@@ -290,11 +308,11 @@ export default function IndiaPanel({ domain = "ALL", onViewChange, viewMode }) {
           `<div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#d4cfc8;background:#0f1214;border:1px solid #2a3038;padding:8px 12px;border-radius:3px;min-width:160px;">
             <div style="color:${color};font-weight:700;margin-bottom:4px;">${entity.name}</div>
             <div style="color:#6a6865;">${entity.label} · ${connections} connections</div>
-            ${entity.location ? `<div style="color:#4a4845;font-size:9px;">📍 ${entity.location}</div>` : ''}
+            ${entity.location ? `<div style="color:#4a4845;font-size:9px;">📍 ${entity.location}</div>` : ""}
           </div>`,
-          { className: "india-popup", closeButton: false }
+          { className: "india-popup", closeButton: false },
         )
-        .on('click', () => {
+        .on("click", () => {
           setSelectedEntity(entity);
         });
 
@@ -302,17 +320,18 @@ export default function IndiaPanel({ domain = "ALL", onViewChange, viewMode }) {
     });
   }, [entities, domain]);
 
-  const toggleLayer = (id) => setStates((prev) => ({ ...prev, [id]: !prev[id] }));
+  const toggleLayer = (id) =>
+    setStates((prev) => ({ ...prev, [id]: !prev[id] }));
 
   const activeLayerIds = DOMAIN_LAYER_MAP[domain] || DOMAIN_LAYER_MAP.ALL;
   const filteredLayers = INDIA_LAYERS.filter((l) =>
-    l.label.toUpperCase().includes(search.toUpperCase())
+    l.label.toUpperCase().includes(search.toUpperCase()),
   );
 
   function getEntityTypeColor(label) {
     if (label === "PERSON") return "#c8922a";
     const layer = ENTITY_LABEL_TO_LAYER[label];
-    const found = INDIA_LAYERS.find(l => l.id === layer);
+    const found = INDIA_LAYERS.find((l) => l.id === layer);
     return found ? found.color : "#6a6865";
   }
 
@@ -336,14 +355,20 @@ export default function IndiaPanel({ domain = "ALL", onViewChange, viewMode }) {
 
         {onViewChange && (
           <div style={s.viewToggle}>
-            <button 
-              style={{ ...s.toggleBtn, ...(viewMode === "MAP" ? s.toggleBtnActive : {}) }} 
+            <button
+              style={{
+                ...s.toggleBtn,
+                ...(viewMode === "MAP" ? s.toggleBtnActive : {}),
+              }}
               onClick={() => onViewChange("MAP")}
             >
               MAP
             </button>
-            <button 
-              style={{ ...s.toggleBtn, ...(viewMode === "GRAPH" ? s.toggleBtnActive : {}) }} 
+            <button
+              style={{
+                ...s.toggleBtn,
+                ...(viewMode === "GRAPH" ? s.toggleBtnActive : {}),
+              }}
               onClick={() => onViewChange("GRAPH")}
             >
               GRAPH
@@ -380,11 +405,7 @@ export default function IndiaPanel({ domain = "ALL", onViewChange, viewMode }) {
           {/* ✅ FIXED: Only checkbox changes, labels always visible */}
           <div style={s.list}>
             {filteredLayers.map((l) => (
-              <div
-                key={l.id}
-                style={s.row}
-                onClick={() => toggleLayer(l.id)}
-              >
+              <div key={l.id} style={s.row} onClick={() => toggleLayer(l.id)}>
                 <div
                   style={{
                     ...s.cb,
@@ -405,13 +426,9 @@ export default function IndiaPanel({ domain = "ALL", onViewChange, viewMode }) {
                   )}
                 </div>
                 {/* ✅ Icon - Always full color */}
-                <span style={{ ...s.lIcon, color: l.color }}>
-                  {l.icon}
-                </span>
+                <span style={{ ...s.lIcon, color: l.color }}>{l.icon}</span>
                 {/* ✅ Label - Always full brightness */}
-                <span style={s.lLabel}>
-                  {l.label}
-                </span>
+                <span style={s.lLabel}>{l.label}</span>
               </div>
             ))}
           </div>
@@ -437,9 +454,18 @@ export default function IndiaPanel({ domain = "ALL", onViewChange, viewMode }) {
           <div ref={mapRef} style={s.map} />
 
           <div style={s.zoom}>
-            <button style={s.zBtn} onClick={() => mapObj.current?.zoomIn()}>+</button>
-            <button style={s.zBtn} onClick={() => mapObj.current?.zoomOut()}>−</button>
-            <button style={{ ...s.zBtn, marginTop: 4 }} onClick={() => mapObj.current?.setView([22.5, 82.5], 4.5)}>⌂</button>
+            <button style={s.zBtn} onClick={() => mapObj.current?.zoomIn()}>
+              +
+            </button>
+            <button style={s.zBtn} onClick={() => mapObj.current?.zoomOut()}>
+              −
+            </button>
+            <button
+              style={{ ...s.zBtn, marginTop: 4 }}
+              onClick={() => mapObj.current?.setView([22.5, 82.5], 4.5)}
+            >
+              ⌂
+            </button>
           </div>
 
           <div style={s.hubBadge}>
@@ -470,10 +496,17 @@ export default function IndiaPanel({ domain = "ALL", onViewChange, viewMode }) {
             >
               {selectedEntity.label}
             </span>
-            <button style={s.detailClose} onClick={() => setSelectedEntity(null)}>✕</button>
+            <button
+              style={s.detailClose}
+              onClick={() => setSelectedEntity(null)}
+            >
+              ✕
+            </button>
           </div>
           <div style={s.detailBody}>
-            <span style={s.detailConnections}>Connections: {selectedEntity.connections}</span>
+            <span style={s.detailConnections}>
+              Connections: {selectedEntity.connections}
+            </span>
             {selectedEntity.location && (
               <span style={s.detailLocation}>📍 {selectedEntity.location}</span>
             )}
@@ -620,7 +653,12 @@ const s = {
     justifyContent: "center",
     transition: "all .15s",
   },
-  lIcon: { fontSize: "11px", width: "14px", textAlign: "center", flexShrink: 0 },
+  lIcon: {
+    fontSize: "11px",
+    width: "14px",
+    textAlign: "center",
+    flexShrink: 0,
+  },
   lLabel: {
     fontFamily: "'Share Tech Mono', monospace",
     fontSize: "9px",
@@ -637,7 +675,12 @@ const s = {
     justifyContent: "space-around",
     alignItems: "center",
   },
-  stat: { display: "flex", flexDirection: "column", alignItems: "center", gap: "2px" },
+  stat: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: "2px",
+  },
   statVal: ({ color }) => ({
     fontFamily: "'Share Tech Mono', monospace",
     fontSize: "14px",
