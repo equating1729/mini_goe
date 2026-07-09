@@ -26,7 +26,10 @@ def query(request: QueryRequest):
         raise HTTPException(status_code=400, detail="Question cannot be empty")
     try:
         answer = query_rag(request.question)
-        return {"question": request.question, "answer": answer}
+        return {
+            "question": request.question,
+            "answer": answer
+            }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

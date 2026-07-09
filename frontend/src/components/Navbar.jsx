@@ -38,7 +38,6 @@ const styles = {
   position: "sticky",
   top: 0,
   zIndex: 100,
-  position: "relative",
 },
   logo: {
     display: "flex",
