@@ -187,7 +187,7 @@ export default function IndiaPanel({ domain = "ALL", onViewChange, viewMode }) {
 
   useEffect(() => {
     const domainParam = domain !== "ALL" ? `&domain=${domain}` : "";
-    fetch(`${API}graph/entities?limit=50${domainParam}`)
+    fetch(`${API}/graph/entities?limit=50${domainParam}`)
       .then((r) => r.json())
       .then((data) => {
         const indiaEntities = data.filter((e) => {

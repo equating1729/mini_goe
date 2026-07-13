@@ -167,7 +167,7 @@ export default function WorldMap({ activeDomain = "ALL" }) {
   }, []);
   useEffect(() => {
     const domainParam = activeDomain !== "ALL" ? `&domain=${activeDomain}` : "";
-    fetch(`${API}graph/entities?limit=30${domainParam}`)
+    fetch(`${API}/graph/entities?limit=30${domainParam}`)
       .then((r) => r.json())
       .then((data) => setIntelEntities(data))
       .catch(() => {});

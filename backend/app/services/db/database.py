@@ -50,28 +50,67 @@ def get_latest_articles(limit: int = 20, domain: str = None):
     conn.close()
     return [dict(r) for r in rows]
 
-def get_article_stats():
+def get_article_stats(domain="ALL"):
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT COUNT(*) as total FROM articles")
+
+    if domain == "ALL":
+        cursor.execute("""
+            SELECT COUNT(*) as total
+            FROM articles
+        """)
+    else:
+        cursor.execute("""
+            SELECT COUNT(*) as total
+            FROM articles
+            WHERE domain = %s
+        """, (domain,))
+
     total = cursor.fetchone()["total"]
-    cursor.execute("""
-        SELECT source, COUNT(*) as count
-        FROM articles
-        GROUP BY source
-        ORDER BY count DESC
-    """)
+
+    if domain == "ALL":
+        cursor.execute("""
+            SELECT source, COUNT(*) as count
+            FROM articles
+            GROUP BY source
+            ORDER BY count DESC
+        """)
+    else:
+        cursor.execute("""
+            SELECT source, COUNT(*) as count
+            FROM articles
+            WHERE domain = %s
+            GROUP BY source
+            ORDER BY count DESC
+        """, (domain,))
+
     by_source = [dict(r) for r in cursor.fetchall()]
-    cursor.execute("""
-        SELECT domain, COUNT(*) as count
-        FROM articles
-        GROUP BY domain
-        ORDER BY count DESC
-    """)
+
+
+    if domain == "ALL":
+        cursor.execute("""
+            SELECT domain, COUNT(*) as count
+            FROM articles
+            GROUP BY domain
+            ORDER BY count DESC
+        """)
+    else:
+        cursor.execute("""
+            SELECT domain, COUNT(*) as count
+            FROM articles
+            WHERE domain = %s
+            GROUP BY domain
+            ORDER BY count DESC
+        """, (domain,))
+
     by_domain = [dict(r) for r in cursor.fetchall()]
+
+
     cursor.execute("SELECT COUNT(*) as total FROM entities")
     entities = cursor.fetchone()["total"]
+
     conn.close()
+
     return {
         "total_articles": total,
         "total_entities": entities,
