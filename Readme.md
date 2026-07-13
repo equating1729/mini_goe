@@ -145,6 +145,8 @@ mini_goe/
 ├── .env                           # Credentials (never commit)
 └── .gitignore
 ```
+<img width="1600" height="1007" alt="WhatsApp Image 2026-07-13 at 8 10 26 PM" src="https://github.com/user-attachments/assets/0d7e7742-b077-4cdb-b0be-331da2a64a9c" />
+
 
 ---
 
