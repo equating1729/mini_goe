@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-
-const API = "http://localhost:8000/api";
+import { API } from "../config";
 
 export default function Sidebar({ activeDomain = "ALL" }) {
   const [blinking, setBlinking] = useState(true);
@@ -19,7 +18,8 @@ export default function Sidebar({ activeDomain = "ALL" }) {
     async function fetchData() {
       setLoading(true);
       try {
-        const domainParam = activeDomain !== "ALL" ? `&domain=${activeDomain}` : "";
+        const domainParam =
+          activeDomain !== "ALL" ? `&domain=${activeDomain}` : "";
         const [articlesRes, statsRes] = await Promise.all([
           fetch(`${API}/articles?${domainParam}`),
           fetch(`${API}/stats`),
@@ -102,7 +102,9 @@ export default function Sidebar({ activeDomain = "ALL" }) {
             Feed
           </h2>
           <p style={styles.subtitle}>
-            {activeDomain === "ALL" ? "Current Live Updates" : `${activeDomain} Updates`}
+            {activeDomain === "ALL"
+              ? "Current Live Updates"
+              : `${activeDomain} Updates`}
           </p>
         </div>
         {/* <div style={styles.hubId}>
@@ -125,9 +127,7 @@ export default function Sidebar({ activeDomain = "ALL" }) {
           </div>
           <div style={styles.statDivider} />
           <div style={styles.statItem}>
-            <span style={styles.statNumber}>
-              {articles.length}
-            </span>
+            <span style={styles.statNumber}>{articles.length}</span>
             <span style={styles.statLabel}>SHOWING</span>
           </div>
         </div>

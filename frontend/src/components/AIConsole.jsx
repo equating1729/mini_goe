@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-
+import { API } from "../config";
 const SYSTEM_PROMPT = `You are a Strategic Geopolitical Intelligence AI called "GOE Strategic Hub v4.0" for a dashboard called "GOE – India's POV". 
 You analyze global events strictly from India's geopolitical, economic, security, and strategic perspective.
 Keep answers concise (2-4 sentences), use a professional intelligence analyst tone, and always tie the answer back to India's interests.
@@ -30,7 +30,7 @@ export default function AIConsole({ domain }) {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:8000/api/query", {
+      const response = await fetch(`${API}/query`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: q, domain: domain }),
@@ -293,4 +293,3 @@ const styles = {
     transition: "color 0.2s",
   },
 };
-

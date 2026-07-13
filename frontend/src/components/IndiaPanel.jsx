@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-
+import { API } from "../config";
 // India-specific coordinates for major locations
 const INDIA_COORDS = {
   // Cities
@@ -187,7 +187,7 @@ export default function IndiaPanel({ domain = "ALL", onViewChange, viewMode }) {
 
   useEffect(() => {
     const domainParam = domain !== "ALL" ? `&domain=${domain}` : "";
-    fetch(`http://localhost:8000/api/graph/entities?limit=50${domainParam}`)
+    fetch(`${API}graph/entities?limit=50${domainParam}`)
       .then((r) => r.json())
       .then((data) => {
         const indiaEntities = data.filter((e) => {

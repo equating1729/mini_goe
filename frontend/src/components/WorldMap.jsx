@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Group, Panel, Separator } from "react-resizable-panels";
+import { API } from "../config";
 
 const LAYERS_DATA = [
   {
@@ -166,7 +167,7 @@ export default function WorldMap({ activeDomain = "ALL" }) {
   }, []);
   useEffect(() => {
     const domainParam = activeDomain !== "ALL" ? `&domain=${activeDomain}` : "";
-    fetch(`http://localhost:8000/api/graph/entities?limit=30${domainParam}`)
+    fetch(`${API}graph/entities?limit=30${domainParam}`)
       .then((r) => r.json())
       .then((data) => setIntelEntities(data))
       .catch(() => {});
