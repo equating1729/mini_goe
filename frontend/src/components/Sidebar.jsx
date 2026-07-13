@@ -22,7 +22,7 @@ export default function Sidebar({ activeDomain = "ALL" }) {
           activeDomain !== "ALL" ? `&domain=${activeDomain}` : "";
         const [articlesRes, statsRes] = await Promise.all([
           fetch(`${API}/articles?${domainParam}`),
-          fetch(`${API}/stats`),
+          fetch(`${API}/stats?domain=${activeDomain}`),
         ]);
         const articlesData = await articlesRes.json();
         const statsData = await statsRes.json();
