@@ -66,12 +66,61 @@ def query(request: QueryRequest):
     if not request.question.strip():
         raise HTTPException(status_code=400, detail="Question cannot be empty")
     try:
-        answer = query_rag(request.question, domain=request.domain)
-        return {
-            "question": request.question,
-            "answer": answer,
-            "domain": request.domain
+        from app.services.db.database import get_latest_articles
+        from groq import Groq
+        import os
+
+        groq_client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+
+        # Get domain from request
+        domain = getattr(request, 'domain', 'ALL')
+
+        # Fetch relevant articles from Supabase
+        articles = get_latest_articles(limit=10, domain=domain if domain != 'ALL' else None)
+
+        if not articles:
+            articles = get_latest_articles(limit=10)
+
+        # Build context
+        context = ""
+        for i, article in enumerate(articles[:5]):
+            context += f"\n[Article {i+1} — {article.get('source', '')} — {article.get('published_at', '')}]\n{article.get('title', '')}. {article.get('body', '') or ''}\n"
+
+        DOMAIN_PERSONALITIES = {
+            "DEFENSE": "You are a strategic defense and military intelligence analyst focused on India's security interests.",
+            "TECH": "You are a technology and cyber intelligence analyst focused on India's technological interests.",
+            "CLIMATE": "You are a climate security analyst focused on India's environmental interests.",
+            "GEO": "You are a geopolitical analyst focused on India's international relations.",
+            "ALL": "You are a strategic multi-domain intelligence analyst focused on India's national interests.",
+            "ECONOMICS": "You are an economic intelligence analyst focused on India's economic interests.",
+            "SOCIETY": "You are a social intelligence analyst focused on India's societal developments.",
         }
+
+        personality = DOMAIN_PERSONALITIES.get(domain, DOMAIN_PERSONALITIES["ALL"])
+
+        prompt = f"""{personality}
+
+Answer the question below using the provided articles from GOE intelligence database.
+Always relate your answer to India's perspective and interests.
+Keep the answer concise — 3 to 5 sentences.
+If articles are not relevant, use your general knowledge but mention it.
+
+Articles:
+{context}
+
+Question: {request.question}
+
+Answer:"""
+
+        response = groq_client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=500
+        )
+
+        answer = response.choices[0].message.content
+        return {"question": request.question, "answer": answer}
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

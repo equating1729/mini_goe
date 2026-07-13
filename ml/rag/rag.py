@@ -415,8 +415,7 @@ Answer:"""
                     max_tokens=500
                     )
             return f"{response.choices[0].message.content}\n\n[Based on general knowledge]"
-        except Exception as e:
-            return f"Error: {e}"
+        except Exception as e:return f"Error: {e}"
     
     # FIFTH: Final fallback
     domain_name = domain if domain != "ALL" else "ALL"
