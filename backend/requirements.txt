@@ -7,3 +7,4 @@ neo4j
 groq
 chromadb
 requests
+psycopg2-binary

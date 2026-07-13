@@ -1,136 +1,80 @@
-import sqlite3
-from typing import Optional
+import os
+import psycopg2
+import psycopg2.extras
 from app.core.config import settings
 
 def get_connection():
-    conn = sqlite3.connect(settings.DB_PATH)
-    conn.row_factory = sqlite3.Row
+    conn = psycopg2.connect(settings.DATABASE_URL)
+    conn.cursor_factory = psycopg2.extras.RealDictCursor
     return conn
 
-def get_latest_articles(limit: Optional[int] = None, domain: str = "ALL"):
-    """
-    Get articles with optional limit.
-    - If limit is None: returns ALL articles
-    - If limit is a number: returns only that many articles
-    - domain filters by specific domain
-    """
+DEFENSE_KEYWORDS = ["military", "army", "navy", "defence", "defense", "pentagon",
+                     "nato", "missile", "troops", "soldier", "border", "terror"]
+
+def get_latest_articles(limit: int = 20, domain: str = None):
     conn = get_connection()
     cursor = conn.cursor()
-    
-    if not domain or domain == "ALL":
-        if limit and limit > 0:
-            cursor.execute("""
-                SELECT id, title, body, source, published_at, url, domain, ingested_at
-                FROM articles
-                ORDER BY ingested_at DESC
-                LIMIT ?
-            """, (limit,))
-        else:
-            # Fetch ALL articles (no limit)
-            cursor.execute("""
-                SELECT id, title, body, source, published_at, url, domain, ingested_at
-                FROM articles
-                ORDER BY ingested_at DESC
-            """)
+
+    if domain == "DEFENSE":
+        cursor.execute("""
+            SELECT id, title, source, domain, published_at, url
+            FROM articles
+            ORDER BY ingested_at DESC
+            LIMIT 300
+        """)
+        rows = cursor.fetchall()
+        conn.close()
+        filtered = [
+            dict(r) for r in rows
+            if any(kw in (r["title"] or "").lower() for kw in DEFENSE_KEYWORDS)
+        ]
+        return filtered[:limit]
+
+    elif domain and domain != "ALL":
+        cursor.execute("""
+            SELECT id, title, source, domain, published_at, url
+            FROM articles
+            WHERE domain = %s
+            ORDER BY ingested_at DESC
+            LIMIT %s
+        """, (domain, limit))
     else:
-        if limit and limit > 0:
-            cursor.execute("""
-                SELECT id, title, body, source, published_at, url, domain, ingested_at
-                FROM articles
-                WHERE domain = ?
-                ORDER BY ingested_at DESC
-                LIMIT ?
-            """, (domain, limit))
-        else:
-            # Fetch ALL articles for this domain (no limit)
-            cursor.execute("""
-                SELECT id, title, body, source, published_at, url, domain, ingested_at
-                FROM articles
-                WHERE domain = ?
-                ORDER BY ingested_at DESC
-            """, (domain,))
-    
+        cursor.execute("""
+            SELECT id, title, source, domain, published_at, url
+            FROM articles
+            ORDER BY ingested_at DESC
+            LIMIT %s
+        """, (limit,))
+
     rows = cursor.fetchall()
     conn.close()
-    return [dict(row) for row in rows]
+    return [dict(r) for r in rows]
 
-def get_article_stats(domain: str = "ALL"):
+def get_article_stats():
     conn = get_connection()
     cursor = conn.cursor()
-    
-    # Domain breakdown (always overall)
-    cursor.execute("SELECT domain, COUNT(*) as count FROM articles GROUP BY domain")
-    domain_breakdown = {row["domain"]: row["count"] for row in cursor.fetchall()}
-    for d in ["GEO", "DEFENSE", "TECH", "CLIMATE"]:
-        if d not in domain_breakdown:
-            domain_breakdown[d] = 0
-
-    if not domain or domain == "ALL":
-        cursor.execute("SELECT COUNT(*) as total FROM articles")
-        total = cursor.fetchone()["total"]
-        cursor.execute("""
-            SELECT source, COUNT(*) as count
-            FROM articles
-            GROUP BY source
-            ORDER BY count DESC
-        """)
-        by_source = [dict(row) for row in cursor.fetchall()]
-        
-        cursor.execute("""
-            SELECT id, title, domain, published_at
-            FROM articles
-            ORDER BY ingested_at DESC
-            LIMIT 5
-        """)
-        recent = [dict(row) for row in cursor.fetchall()]
-        
-        try:
-            cursor.execute("SELECT COUNT(*) as total FROM entities")
-            entities = cursor.fetchone()["total"]
-        except sqlite3.OperationalError:
-            entities = 0
-    else:
-        cursor.execute("SELECT COUNT(*) as total FROM articles WHERE domain = ?", (domain,))
-        total = cursor.fetchone()["total"]
-        cursor.execute("""
-            SELECT source, COUNT(*) as count
-            FROM articles
-            WHERE domain = ?
-            GROUP BY source
-            ORDER BY count DESC
-        """, (domain,))
-        by_source = [dict(row) for row in cursor.fetchall()]
-        
-        cursor.execute("""
-            SELECT id, title, domain, published_at
-            FROM articles
-            WHERE domain = ?
-            ORDER BY ingested_at DESC
-            LIMIT 5
-        """, (domain,))
-        recent = [dict(row) for row in cursor.fetchall()]
-        
-        try:
-            cursor.execute("""
-                SELECT COUNT(*) as total 
-                FROM entities e
-                JOIN articles a ON e.article_id = a.id
-                WHERE a.domain = ?
-            """, (domain,))
-            entities = cursor.fetchone()["total"]
-        except sqlite3.OperationalError:
-            entities = 0
-            
+    cursor.execute("SELECT COUNT(*) as total FROM articles")
+    total = cursor.fetchone()["total"]
+    cursor.execute("""
+        SELECT source, COUNT(*) as count
+        FROM articles
+        GROUP BY source
+        ORDER BY count DESC
+    """)
+    by_source = [dict(r) for r in cursor.fetchall()]
+    cursor.execute("""
+        SELECT domain, COUNT(*) as count
+        FROM articles
+        GROUP BY domain
+        ORDER BY count DESC
+    """)
+    by_domain = [dict(r) for r in cursor.fetchall()]
+    cursor.execute("SELECT COUNT(*) as total FROM entities")
+    entities = cursor.fetchone()["total"]
     conn.close()
     return {
         "total_articles": total,
         "total_entities": entities,
         "by_source": by_source,
-        "domain_breakdown": domain_breakdown,
-        "recent": recent,
-        "current_domain": domain
+        "by_domain": by_domain
     }
-
-def get_all_articles(domain: str = "ALL"):
-    """Convenience function to get ALL articles without limit."""
-    return get_latest_articles(limit=None, domain=domain)
