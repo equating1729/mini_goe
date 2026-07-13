@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const API = "http://localhost:8000/api";
+const API = import.meta.env.VITE_API;
 
 export default function GraphPanel() {
   const [entities, setEntities] = useState([]);
