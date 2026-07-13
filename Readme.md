@@ -80,13 +80,12 @@ A working intelligence system that automatically collects news across multiple d
 The RAG layer doesn't just blindly search articles — it triages every question first:
 
 1. **Is it a real-time question?** (price, weather, "latest", "today", crypto, exchange rate) → skip the article DB, hit a live API (gold-api.com, CoinGecko, Open-Meteo, exchangerate-api.com) or a DuckDuckGo lookup, then let Groq phrase the final answer.
-2. **Otherwise, search ChromaDB** for the most relevant ingested articles (filtered by domain if one is selected), and check if they're actually relevant to the question.
+2. **Otherwise, search DB** for the most relevant ingested articles (filtered by domain if one is selected), and check if they're actually relevant to the question.
 3. **If relevant articles are found** → build a context prompt with a domain-specific analyst persona and ask Groq to answer using only those articles.
 4. **If nothing relevant is found** → try one more live internet search.
 5. **If it's a general-knowledge question** (what is / who is / define / explain) → answer straight from the LLM's own knowledge, labelled as such.
-6. **Final fallback** → tell the user nothing was found and suggest switching domains or re-syncing.
 
-> Note: `backend/app/api/routes.py`'s `/api/query` endpoint currently talks to Groq directly using the latest articles from the database (not the ChromaDB layer above) — the full RAG pipeline in `ml/rag/rag.py` is used by the `/api/index` endpoint and is also runnable standalone for testing.
+
 
 ---
 
@@ -137,7 +136,7 @@ mini_goe/
 │   ├── graph/
 │   │   └── graph.py               # Builds CO_MENTIONED graph in Neo4j
 │   ├── rag/
-│   │   └── rag.py                 # ChromaDB indexing + Groq-based Q&A + live fallbacks
+│   │   └── rag.py                 # DB indexing + Groq-based Q&A + live fallbacks
 │   └── requirements.txt
 │
 ├── data/                          # Auto-created locally, never committed
@@ -157,7 +156,7 @@ mini_goe/
 | Database | PostgreSQL (Supabase) — articles & entities |
 | Entity extraction | spaCy `en_core_web_sm` |
 | Knowledge graph | Neo4j (AuraDB in production) |
-| Vector store | ChromaDB |
+| Vector store 
 | LLM | Groq — `llama-3.3-70b-versatile` |
 | Live data fallback | DuckDuckGo Instant Answer, CoinGecko, Open-Meteo, exchangerate-api, gold-api |
 | Backend API | FastAPI + uvicorn (hosted on Render) |
