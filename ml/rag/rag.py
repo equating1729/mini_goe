@@ -1,27 +1,46 @@
 import sys
 import os
+from pathlib import Path
+from dotenv import load_dotenv
 import requests
 import json
 import re
 from datetime import datetime
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../ingestion")))
 
+BASE_DIR = Path(__file__).resolve().parents[2]  
+load_dotenv(BASE_DIR / ".env")
+
+sys.path.insert(0, str(BASE_DIR / "ml" / "ingestion"))
 from store import get_connection
 import chromadb
 from chromadb.utils import embedding_functions
-import ollama
+from groq import Groq
+groq_client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 CHROMA_PATH = os.path.join(os.path.dirname(__file__), "../../data/chroma_db")
 
 chroma_client = chromadb.PersistentClient(path=CHROMA_PATH)
 
-embedding_fn = embedding_functions.SentenceTransformerEmbeddingFunction(
-    model_name="all-MiniLM-L6-v2"
-)
+def get_embedding(text: str):
+    import hashlib
+    words = text.lower().split()[:50]
+    vec = [float(int(hashlib.md5(w.encode()).hexdigest()[:8], 16)) / 1e10 for w in words]
+    return vec + [0.0] * (50 - len(vec))
+
+class SimpleEmbeddingFunction:
+    def __call__(self, input):
+        return [get_embedding(text) for text in input]
+    def name(self):
+        return "simple-hash-embedding"
+    def embed_documents(self, input):
+        return [get_embedding(text) for text in input]
+    
+    def embed_query(self, input):
+        return [get_embedding(text) for text in input]
 
 collection = chroma_client.get_or_create_collection(
-    name="goe_articles",
-    embedding_function=embedding_fn
+    name="goe_articles_v2",
+    embedding_function=SimpleEmbeddingFunction()
 )
 
 DOMAIN_PERSONALITIES = {
@@ -278,11 +297,14 @@ Question: {question}
 Answer:"""
             
             try:
-                response = ollama.chat(
-                    model="llama3.2",
-                    messages=[{"role": "user", "content": prompt}]
-                )
-                return f"{response['message']['content']}\n\n[Data sourced from internet]"
+                response = groq_client.chat.completions.create(
+                    model="llama-3.3-70b-versatile",
+                    messages=[
+                        {"role": "user", "content": prompt}
+                        ],
+                        max_tokens=500
+                        )
+                return f"{response.choices[0].message.content}\n\n[Data sourced from internet]"
             except Exception as e:
                 return f"{internet_result}\n\n[Data sourced from internet]"
     
@@ -332,11 +354,14 @@ Question: {question}
 Answer:"""
 
             try:
-                response = ollama.chat(
-                    model="llama3.2",
-                    messages=[{"role": "user", "content": prompt}]
-                )
-                return response["message"]["content"]
+                response = groq_client.chat.completions.create(
+                    model="llama-3.3-70b-versatile",
+                    messages=[
+                        {"role": "user", "content": prompt}
+                        ],
+                        max_tokens=500
+                        )
+                return response.choices[0].message.content
             except Exception as e:
                 return f"Error querying LLM: {e}"
     
@@ -357,11 +382,14 @@ Question: {question}
 Answer:"""
         
         try:
-            response = ollama.chat(
-                model="llama3.2",
-                messages=[{"role": "user", "content": prompt}]
-            )
-            return f"{response['message']['content']}\n\n[Data sourced from internet]"
+            response = groq_client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[
+                    {"role": "user", "content": prompt}
+                    ],
+                    max_tokens=500
+                    )
+            return f"{response.choices[0].message.content}\n\n[Data sourced from internet]"
         except Exception as e:
             return f"{internet_result}\n\n[Data sourced from internet]"
     
@@ -379,11 +407,14 @@ Question: {question}
 Answer:"""
         
         try:
-            response = ollama.chat(
-                model="llama3.2",
-                messages=[{"role": "user", "content": prompt}]
-            )
-            return f"{response['message']['content']}\n\n[Based on general knowledge]"
+            response = groq_client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[
+                    {"role": "user", "content": prompt}
+                    ],
+                    max_tokens=500
+                    )
+            return f"{response.choices[0].message.content}\n\n[Based on general knowledge]"
         except Exception as e:
             return f"Error: {e}"
     
