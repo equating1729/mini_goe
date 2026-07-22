@@ -77,10 +77,9 @@ A working intelligence system that automatically collects news across multiple d
 
 ### The "smart answer" logic (`ml/rag/rag.py`)
 
-The RAG layer doesn't just blindly search articles — it triages every question first:
+The RAG layer doesn't just blindly search articles, it triages every question first:
 
-1. **Is it a real-time question?** (price, weather, "latest", "today", crypto, exchange rate) → skip the article DB, hit a live API (gold-api.com, CoinGecko, Open-Meteo, exchangerate-api.com) or a DuckDuckGo lookup, then let Groq phrase the final answer.
-2. **Otherwise, search DB** for the most relevant ingested articles (filtered by domain if one is selected), and check if they're actually relevant to the question.
+1. **Search DB** for the most relevant ingested articles (filtered by domain if one is selected), and check if they're actually relevant to the question.
 3. **If relevant articles are found** → build a context prompt with a domain-specific analyst persona and ask Groq to answer using only those articles.
 4. **If nothing relevant is found** → try one more live internet search.
 5. **If it's a general-knowledge question** (what is / who is / define / explain) → answer straight from the LLM's own knowledge, labelled as such.
@@ -129,7 +128,7 @@ mini_goe/
 │   │   ├── fetch.py               # RSS ingestion across 6 domains
 │   │   ├── store.py               # Postgres connection + table setup
 │   │   ├── migrate.py             # One-off local SQLite → Postgres migration
-│   │   ├── scheduler.py           # Runs fetch.py every 4 hours
+│   │   ├── scheduler.py           
 │   │   └── test_feeds.py          # Sanity-check RSS feeds are alive
 │   ├── nlp/
 │   │   └── ner.py                 # spaCy entity extraction
@@ -139,10 +138,10 @@ mini_goe/
 │   │   └── rag.py                 # DB indexing + Groq-based Q&A + live fallbacks
 │   └── requirements.txt
 │
-├── data/                          # Auto-created locally, never committed
-│   └── chroma_db/                 # Local vector store
+├── data/                          
+│   └── chroma_db/                 
 │
-├── .env                           # Credentials (never commit)
+├── .env                           # Credentials
 └── .gitignore
 ```
 <img width="1600" height="1007" alt="WhatsApp Image 2026-07-13 at 8 10 26 PM" src="https://github.com/user-attachments/assets/0d7e7742-b077-4cdb-b0be-331da2a64a9c" />
@@ -160,7 +159,6 @@ mini_goe/
 | Knowledge graph | Neo4j (AuraDB in production) |
 | Vector store 
 | LLM | Groq — `llama-3.3-70b-versatile` |
-| Live data fallback | DuckDuckGo Instant Answer, CoinGecko, Open-Meteo, exchangerate-api, gold-api |
 | Backend API | FastAPI + uvicorn (hosted on Render) |
 | Frontend | React 19 + Vite (hosted on Vercel) |
 | Maps | Leaflet-style world/India panels |
