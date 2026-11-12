@@ -226,12 +226,9 @@ export default function IndiaPanel({ domain = "ALL", onViewChange, viewMode }) {
       attributionControl: false,
     });
 
-    L.tileLayer(
-      "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-      {
-        maxZoom: 19,
-      },
-    ).addTo(map);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+    }).addTo(map);
 
     INDIA_LAYERS.forEach((layer) => {
       const group = L.layerGroup();
@@ -341,6 +338,7 @@ export default function IndiaPanel({ domain = "ALL", onViewChange, viewMode }) {
         @keyframes indiaPulse { 0%{transform:scale(1);opacity:.4} 100%{transform:scale(3.5);opacity:0} }
         @keyframes slideIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
         .leaflet-container { background:#080c10 !important; }
+        .leaflet-tile-pane {filter: invert(1) hue-rotate(180deg) brightness(0.8) contrast(0.9) saturate(0.6);}
         .india-popup .leaflet-popup-content-wrapper { background:transparent!important;border:none!important;box-shadow:none!important;padding:0!important; }
         .india-popup .leaflet-popup-tip-container { display:none!important; }
         .india-popup .leaflet-popup-content { margin:0!important; }

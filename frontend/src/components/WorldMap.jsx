@@ -137,12 +137,9 @@ export default function WorldMap({ activeDomain = "ALL" }) {
       map.invalidateSize();
     }, 300);
 
-    L.tileLayer(
-      "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-      {
-        maxZoom: 19,
-      },
-    ).addTo(map);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+    }).addTo(map);
 
     LAYERS_DATA.forEach((layer) => {
       const group = L.layerGroup();
@@ -246,6 +243,7 @@ export default function WorldMap({ activeDomain = "ALL" }) {
       <style>{`
         @keyframes mapPulse { 0%{transform:scale(1);opacity:.4} 100%{transform:scale(3.5);opacity:0} }
         .leaflet-container { background:#080c10 !important; }
+        .leaflet-tile-pane {filter: invert(1) hue-rotate(180deg) brightness(0.8) contrast(0.9) saturate(0.6);}
         .goe-popup .leaflet-popup-content-wrapper { background:transparent!important;border:none!important;box-shadow:none!important;padding:0!important; }
         .goe-popup .leaflet-popup-tip-container { display:none!important; }
         .goe-popup .leaflet-popup-content { margin:0!important; }
