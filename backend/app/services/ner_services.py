@@ -27,14 +27,25 @@ def get_top_entities(limit: int = 50, domain: str = None):
             """, limit=limit)
         return [dict(r) for r in result]
 
-def get_entity_connections(entity_name: str):
+def get_entity_connections(entity_name: str, domain: str = "ALL"):
     with driver.session() as session:
-        result = session.run("""
-            MATCH (a:Entity {name: $name})-[r]-(b:Entity)
-            RETURN b.name as connected_to,
-                   b.label as label,
-                   count(r) as strength
-            ORDER BY strength DESC
-            LIMIT 20
-        """, name=entity_name)
+        if domain and domain != "ALL":
+            result = session.run("""
+                MATCH (a:Entity {name: $name})-[r:CO_MENTIONED]-(b:Entity)
+                WHERE r.domain = $domain
+                RETURN b.name as connected_to,
+                       b.label as label,
+                       count(r) as strength
+                ORDER BY strength DESC
+                LIMIT 20
+            """, name=entity_name, domain=domain)
+        else:
+            result = session.run("""
+                MATCH (a:Entity {name: $name})-[r]-(b:Entity)
+                RETURN b.name as connected_to,
+                       b.label as label,
+                       count(r) as strength
+                ORDER BY strength DESC
+                LIMIT 20
+            """, name=entity_name)
         return [dict(r) for r in result]

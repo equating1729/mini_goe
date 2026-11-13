@@ -14,7 +14,8 @@ class Settings(BaseSettings):
     DB_PATH: str = os.path.join(ROOT_DIR, "data/goe.db")
     CHROMA_PATH: str = os.path.join(ROOT_DIR, "data/chroma_db")
 
-    GROQ_API_KEY: str = ""
+    GEMINI_API_KEY: str = ""
+    GEMINI_MODEL: str = "gemini-2.5-flash"
 
     class Config:
         env_file = os.path.join(ROOT_DIR, ".env")

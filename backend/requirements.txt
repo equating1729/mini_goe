@@ -4,7 +4,6 @@ pydantic==2.13.3
 pydantic-settings
 python-dotenv==1.2.2
 neo4j
-groq
-chromadb
 requests
 psycopg2-binary
+google-genai
